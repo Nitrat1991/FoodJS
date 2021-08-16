@@ -95,8 +95,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Modal
 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modal = document.querySelector('.modal'),
-        modalCloseBtn = document.querySelector('[data-close]');
+        modal = document.querySelector('.modal');
 
     function openModal() {
         modal.classList.add('show');
@@ -115,10 +114,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    modalCloseBtn.addEventListener('click', closeModal);
-
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
@@ -129,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // const modalTimerId = setTimeout(openModal, 5000);
+    const modalTimerId = setTimeout(openModal, 5000);
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -143,13 +140,14 @@ window.addEventListener('DOMContentLoaded', () => {
     // классы для карточек
 
     class MenuCard {
-        constructor(src, alt, title, descr, price, parentSelector) {
+        constructor(src, alt, title, descr, price, parentSelector, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.descr = descr;
             this.price = price;
-            this.parent = document.querySelector(parentSelector); 
+            this.classes = classes;
+            this.parent = document.querySelector(parentSelector);
             this.transfer = 74;
             this.changeToUAH();
         }
@@ -160,8 +158,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
         render() {
             const element = document.createElement('div');
-            element.innerHTML = `
-                <div class="menu__item">
+
+            if (this.classes.length === 0) {
+                this.element = 'menu__item';
+                element.classList.add(this.element);
+            } else {
+                this.classes.forEach(className => element.classList.add(className));
+            }
+
+            element.innerHTML = `                
                     <img src=${this.src} alt=${this.alt}>
                     <h3 class="menu__item-subtitle">${this.title}</h3>
                     <div class="menu__item-descr">${this.descr}</div>
@@ -169,38 +174,134 @@ window.addEventListener('DOMContentLoaded', () => {
                     <div class="menu__item-price">
                         <div class="menu__item-cost">Цена:</div>
                         <div class="menu__item-total"><span>${this.price}</span> руб/день</div>
-                    </div>
-                </div>
-            `; 
+                    </div>                
+            `;
             this.parent.append(element);
         }
     }
 
     new MenuCard(
         'img/tabs/vegy.jpg',
-        'vegy', 
-        'Меню "Фитнес"', 
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!', 
+        'vegy',
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
         9,
         '.menu .container'
     ).render();
 
     new MenuCard(
         'img/tabs/elite.jpg',
-        'elite', 
-        'Меню “Премиум”', 
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 
+        'elite',
+        'Меню “Премиум”',
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
         11,
-        '.menu .container'
+        '.menu .container',
+        'menu__item',
+        'big'
     ).render();
 
     new MenuCard(
         'img/tabs/post.jpg',
-        'post', 
-        'Меню "Постное"', 
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ', 
+        'post',
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
         10,
-        '.menu .container'
+        '.menu .container',
+        'menu__item'
     ).render();
 
+    // Forms
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'img/form/spinner.svg',
+        success: 'Спасибо! Скоро свяжетмся с вами!',
+        failure: 'Что то пошло не так...'
+    };
+
+    forms.forEach(item => {
+        postData(item);
+    });
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const statusMsg = document.createElement('img');
+            statusMsg.src = message.loading;
+            statusMsg.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            form.insertAdjacentElement('afterend', statusMsg);
+
+            // const request = new XMLHttpRequest();
+            // request.open('POST', 'server.php');
+
+            const formData = new FormData(form);
+
+            const object = {};
+
+            formData.forEach(function (value, key) {
+                object[key] = value;
+            });
+
+            // const json = JSON.stringify(object);
+
+            fetch('server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);                
+                statusMsg.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
+            });
+        });
+    }
+
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide');
+        openModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+            <div class="modal__content">
+                <div data-close class="modal__close">&times;</div>
+                <div class="modal__title">${message}</div>
+            </div>
+        `;
+
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000);
+    }
+
+    // fetch('https://jsonplaceholder.typicode.com/posts', {
+    //         method: "POST",
+    //         body: JSON.stringify({
+    //             name: "Alex"
+    //         }),
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         }
+    //     })
+    //     .then(response => response.json())
+    //     .then(json => console.log(json));
 });
