@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
-        tabasParent = document.querySelector('.tabheader__items');
+        tabsParent = document.querySelector('.tabheader__items');
 
     function hideTabeContent() {
         tabsContent.forEach(item => {
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
     hideTabeContent();
     showTabContent();
 
-    tabasParent.addEventListener('click', (event) => {
+    tabsParent.addEventListener('click', (event) => {
         const target = event.target;
 
         if (target && target.classList.contains('tabheader__item')) {
@@ -190,12 +190,12 @@ window.addEventListener('DOMContentLoaded', () => {
         return res.json();
     };
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
-        });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //         });
+    //     });
 
     // getResource('http://localhost:3000/menu')
     //     .then(data => createCard(data));
@@ -220,6 +220,13 @@ window.addEventListener('DOMContentLoaded', () => {
     //         document.querySelector('.menu .container').append(element);
     //     });
     // }
+
+    axios.get('http://localhost:3000/menu')
+        .then(data => {
+            data.data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
     // Forms
 
@@ -303,4 +310,61 @@ window.addEventListener('DOMContentLoaded', () => {
     // fetch('http://localhost:3000/menu')
     //     .then(data => data.json())
     //     .then(res => console.log(res));
+
+    // Слайдер
+
+    const numberSlider = document.querySelector('#current'),
+        totalSlider = document.querySelector('#total'),
+        btnNextSlider = document.querySelector('.offer__slider-next'),
+        btnWrapperSlider = document.querySelector('.offer__slider-prev'),
+        imgSlider = document.querySelectorAll('.offer__slide');
+
+    let countSlider = numberSlider.innerHTML;    
+
+    btnNextSlider.addEventListener('click', () => {
+        if (+countSlider < +totalSlider.innerHTML) {            
+            countSlider = getZero(+countSlider + 1);            
+            hideImgSlider(); 
+            showImgSlider(+countSlider -1);
+            numberSlider.innerHTML = countSlider;          
+        } else {
+            countSlider = getZero(1);
+            hideImgSlider();
+            showImgSlider(0);
+            numberSlider.innerHTML = countSlider;
+        }
+    });
+
+    btnWrapperSlider.addEventListener('click', () => {
+        if (+countSlider > 1) {            
+            countSlider = getZero(+countSlider - 1);
+            hideImgSlider();
+            showImgSlider(+countSlider -1);
+            numberSlider.innerHTML = countSlider;            
+        } else {
+            countSlider = getZero(4);
+            hideImgSlider();
+            showImgSlider(3);
+            numberSlider.innerHTML = countSlider;
+        }
+    });
+
+    function hideImgSlider() {
+        imgSlider.forEach((item) => {
+            item.classList.add('hide');
+            item.classList.remove('show', 'fade');
+        });
+    }
+
+    function showImgSlider(i = 0) {
+        imgSlider[i].classList.add('show', 'fade');
+        imgSlider[i].classList.remove('hide');        
+    }
+
+    hideImgSlider();
+    showImgSlider(+numberSlider.innerHTML -1);
+
+    // imgSlider[2].classList.add('show', 'fade');
+
+    console.log(imgSlider);
 });
