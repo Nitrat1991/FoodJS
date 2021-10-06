@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Nitrat1991/FoodJS#readme",
   "dependencies": {
-    "json-server": "^0.16.3"
+    "json-server": "^0.16.3",
+    "to": "^0.2.9",
+    "update": "^0.7.4"
   }
 }

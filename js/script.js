@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Tabs
     const tabs = document.querySelectorAll('.tabheader__item'),
         tabsContent = document.querySelectorAll('.tabcontent'),
-        tabasParent = document.querySelector('.tabheader__items');
+        tabsParent = document.querySelector('.tabheader__items');
 
     function hideTabeContent() {
         tabsContent.forEach(item => {
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
     hideTabeContent();
     showTabContent();
 
-    tabasParent.addEventListener('click', (event) => {
+    tabsParent.addEventListener('click', (event) => {
         const target = event.target;
 
         if (target && target.classList.contains('tabheader__item')) {
@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
-    const deadLine = '2021-08-20';
+    const deadLine = '2021-10-12';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -190,12 +190,12 @@ window.addEventListener('DOMContentLoaded', () => {
         return res.json();
     };
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
-        });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //         });
+    //     });
 
     // getResource('http://localhost:3000/menu')
     //     .then(data => createCard(data));
@@ -220,6 +220,13 @@ window.addEventListener('DOMContentLoaded', () => {
     //         document.querySelector('.menu .container').append(element);
     //     });
     // }
+
+    axios.get('http://localhost:3000/menu')
+        .then(data => {
+            data.data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
     // Forms
 
@@ -303,4 +310,117 @@ window.addEventListener('DOMContentLoaded', () => {
     // fetch('http://localhost:3000/menu')
     //     .then(data => data.json())
     //     .then(res => console.log(res));
+
+    // Слайдер мой
+
+    // const numberSlider = document.querySelector('#current'),
+    //     totalSlider = document.querySelector('#total'),
+    //     next = document.querySelector('.offer__slider-next'),
+    //     prev = document.querySelector('.offer__slider-prev'),
+    //     imgSlider = document.querySelectorAll('.offer__slide');
+
+    // let countSlider = numberSlider.innerHTML;    
+
+    // next.addEventListener('click', () => {
+    //     if (+countSlider < +totalSlider.innerHTML) {            
+    //         countSlider = getZero(+countSlider + 1);            
+    //         hideImgSlider(); 
+    //         showImgSlider(+countSlider -1);
+    //         numberSlider.innerHTML = countSlider;          
+    //     } else {
+    //         countSlider = getZero(1);
+    //         hideImgSlider();
+    //         showImgSlider(0);
+    //         numberSlider.innerHTML = countSlider;
+    //     }
+    // });
+
+    // prev.addEventListener('click', () => {
+    //     if (+countSlider > 1) {            
+    //         countSlider = getZero(+countSlider - 1);
+    //         hideImgSlider();
+    //         showImgSlider(+countSlider -1);
+    //         numberSlider.innerHTML = countSlider;            
+    //     } else {
+    //         countSlider = getZero(4);
+    //         hideImgSlider();
+    //         showImgSlider(3);
+    //         numberSlider.innerHTML = countSlider;
+    //     }
+    // });
+
+    // function hideImgSlider() {
+    //     imgSlider.forEach((item) => {
+    //         item.classList.add('hide');
+    //         item.classList.remove('show', 'fade');
+    //     });
+    // }
+
+    // function showImgSlider(i = 0) {
+    //     imgSlider[i].classList.add('show', 'fade');
+    //     imgSlider[i].classList.remove('hide');        
+    // }
+
+    // hideImgSlider();
+    // showImgSlider(+numberSlider.innerHTML -1);
+
+    // Slider #1
+
+    // const slides = document.querySelectorAll('.offer__slide'),
+    //     next = document.querySelector('.offer__slider-next'),
+    //     prev = document.querySelector('.offer__slider-prev'),
+    //     total = document.querySelector('#total'),
+    //     current = document.querySelector('#current');
+    // let slideIndex = 1;
+
+    // showSlides(slideIndex);
+
+    // if (slides.length < 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length;
+    // }
+
+    // function showSlides(n) {
+    //     if (n > slides.length) {
+    //         slideIndex = 1;
+    //     }
+
+    //     if (n < 1) {
+    //         slideIndex = slides.length;
+    //     }
+
+    //     slides.forEach( item => item.style.display = 'none');
+
+    //     slides[slideIndex -1].style.display = 'block';
+
+    //     if (slides.length < 10) {
+    //         current.textContent = `0${slideIndex}`;
+    //     } else {
+    //         current.textContent = slideIndex;
+    //     }
+    // }
+
+    // function plusSlides(n) {
+    //     showSlides(slideIndex += n);
+    // }
+
+    // prev.addEventListener('click', () => {
+    //     plusSlides(-1);
+    // });
+
+    // next.addEventListener('click', () => {
+    //     plusSlides(1);
+    // });
+
+    // Slider #2
+
+    const slides = document.querySelectorAll('.offer__slide'),
+        next = document.querySelector('.offer__slider-next'),
+        prev = document.querySelector('.offer__slider-prev'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slideField = document.querySelector('.offer__slider-inner');
+    let slideIndex = 1;
 });
