@@ -223,17 +223,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     axios.get('http://localhost:3000/menu')
         .then(data => {
-<<<<<<< HEAD
-            data.data.forEach(({
-                img,
-                altimg,
-                title,
-                descr,
-                price
-            }) => {
-=======
             data.data.forEach(({img, altimg, title, descr, price}) => {
->>>>>>> 25b1002a2fd747ddcedd95fd61dd4992bb19239b
                 new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
