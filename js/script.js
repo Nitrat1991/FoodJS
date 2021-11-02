@@ -223,6 +223,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     axios.get('http://localhost:3000/menu')
         .then(data => {
+<<<<<<< HEAD
             data.data.forEach(({
                 img,
                 altimg,
@@ -230,6 +231,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 descr,
                 price
             }) => {
+=======
+            data.data.forEach(({img, altimg, title, descr, price}) => {
+>>>>>>> 25b1002a2fd747ddcedd95fd61dd4992bb19239b
                 new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
@@ -316,7 +320,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // fetch('http://localhost:3000/menu')
     //     .then(data => data.json())
     //     .then(res => console.log(res));
-
     // Слайдер мой
 
     // const numberSlider = document.querySelector('#current'),
